@@ -16,6 +16,8 @@ let arrayVagas = [
 ]
 
 struct MapView: View {
+    
+    @ObservedObject var viewModel = ViewModel()
     var body: some View {
 
         NavigationStack {
@@ -49,15 +51,24 @@ struct MapView: View {
                         HStack{
                             ForEach(0..<3){i in
                                 Rectangle().frame(maxWidth: 100).frame(maxHeight: 200).foregroundColor(.gray)
+                                    .overlay(
+                                        VStack {
+                                            ForEach(viewModel.API, id: \._id) { j in
+                                                Text(j.bloco_A[0].id_vaga)
+                                                Text(j.bloco_A[0].situacao)
+                                                
+                                            }
+                                          }.onAppear() {
+                                              viewModel.getData()
+                                              
+                                          })
                             }
                         }
-                            
+                        
                         }
                     }
                     .padding(.bottom)
-                    
-                    
-                    
+
                 }
                 .navigationBarBackButtonHidden(true)
             }
@@ -69,3 +80,16 @@ struct MapView: View {
 #Preview {
     MapView()
 }
+
+/*  VStack {
+      ForEach(viewModel.API, id: \._id) { i in
+          ForEach(i.bloco_A, id: \.id) { j in
+              Text("Vaga \(j.id) Disponivel: \(j.disponivel)")
+          }
+          
+      }
+  }.onAppear() {
+      viewModel.getData()
+      
+  }
+  .padding() */
