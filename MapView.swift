@@ -15,11 +15,15 @@ let arrayVagas = [
     Vaga(name: "Bloco C", color: "green-card", disponivel: false)
 ]
 
+var contador = 0
+
 struct MapView: View {
     
+    @State var colorVaga = "gray-vaga"
     @ObservedObject var viewModel = ViewModel()
+    
     var body: some View {
-
+        
         NavigationStack {
             ZStack {
                 Color("bg-blue")
@@ -49,31 +53,44 @@ struct MapView: View {
                     
                     Rectangle().foregroundColor(.white).opacity(0.9).cornerRadius(5).padding().overlay{
                         HStack{
-                            ForEach(0..<3){i in
-                                Rectangle().frame(maxWidth: 100).frame(maxHeight: 200).foregroundColor(.gray)
-                                    .overlay(
-                                        VStack {
-                                            ForEach(viewModel.API, id: \._id) { j in
-                                                Text(j.bloco_A[0].id_vaga)
-                                                Text(j.bloco_A[0].situacao)
-                                                
+                            ForEach(viewModel.API, id: \._id) { i in
+                                ForEach(i.bloco_A, id: \.self) { j in
+                            
+                                    let colorVaga: Color = j.situacao == "Vaga disponível" ? Color("green-card") : Color("red-card")
+                                    Rectangle()
+                                        .cornerRadius(4)
+                                        .foregroundStyle(Color(colorVaga))
+                                        .frame(maxWidth: 100, maxHeight: 150)
+                                        .overlay(
+                                            VStack {
+                                                Text(j.id_vaga)
                                             }
-                                          }.onAppear() {
-                                              viewModel.getData()
-                                              
-                                          })
+                                            
+                                        )
+                                    if(j != i.bloco_A.last) {
+                                        Rectangle()
+                                            .cornerRadius(4)
+                                            .foregroundStyle(Color("green-card"))
+                                            .frame(maxWidth: 100, maxHeight: 150)
+                                    }
+                                    
+                                }
                             }
+                            
                         }
                         
-                        }
+                    }.onAppear() {
+                        viewModel.getData()
+                        
                     }
-                    .padding(.bottom)
-
                 }
-                .navigationBarBackButtonHidden(true)
+                .padding(.bottom)
+                
             }
+            .navigationBarBackButtonHidden(true)
         }
     }
+}
 
 
 
@@ -82,14 +99,16 @@ struct MapView: View {
 }
 
 /*  VStack {
-      ForEach(viewModel.API, id: \._id) { i in
-          ForEach(i.bloco_A, id: \.id) { j in
-              Text("Vaga \(j.id) Disponivel: \(j.disponivel)")
-          }
-          
-      }
-  }.onAppear() {
-      viewModel.getData()
-      
-  }
-  .padding() */
+ ForEach(viewModel.API, id: \._id) { i in
+ ForEach(i.bloco_A, id: \.id) { j in
+ Text("Vaga \(j.id) Disponivel: \(j.disponivel)")
+ }
+ 
+ }
+ }.onAppear() {
+ viewModel.getData()
+ 
+ }
+ .padding() */
+
+
