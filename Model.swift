@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct Model: Codable {
+struct Model: Codable, Hashable {
     let _id: String
     let _rev: String
     let bloco_A: [vaga]
    
 }
 
-struct vaga: Codable {
-    let id: String
-    let disponivel: Bool
+struct vaga: Codable, Hashable {
+    let id_vaga: String
+    let situacao: String
 }
